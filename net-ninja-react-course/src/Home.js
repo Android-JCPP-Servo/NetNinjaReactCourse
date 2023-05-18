@@ -2,14 +2,13 @@ import { useEffect, useState } from "react";
 import BlogList from "./BlogList";
 
 const Home = () => {
-    const [blogs, setBlogs] = useState([]);
-
-    const [name, setName] = useState('"Gears"');
+    const [blogs, setBlogs] = useState(null);
 
     useEffect(() => {
-        console.log("useEffect ran!");
-        console.log(name);
-    }, [name]);
+        fetch('http://localhost:8000/blogs')
+        .then(res => res.json())
+        .then(data => setBlogs(data));
+    }, []);
 
     const handleDelete = id => {
         const newBlogs = blogs.filter(blog => blog.id !== id);
@@ -18,9 +17,7 @@ const Home = () => {
 
     return ( 
         <div className="home">
-            <BlogList blogs={blogs} title="All Blogs" handleDelete={handleDelete} />
-            <button onClick={() => setName("Jackson")}>Change Name</button>
-            <p>{name}</p>
+            {blogs && <BlogList blogs={blogs} title="All Blogs" handleDelete={handleDelete} />}
         </div>
     );
 }
